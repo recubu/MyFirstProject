@@ -33,7 +33,8 @@ st.subheader("Ingeniería Audiovisual e Integración Tecnológica")
 st.sidebar.header("Configuración de Conexión")
 # Intenta leer la clave de forma oculta desde el servidor; si no existe, pide escribirla
 api_key = st.sidebar.text_input("Introduce tu Gemini API Key:", value=st.secrets.get("GEMINI_API_KEY", ""), type="password")
-webhook_url = st.sidebar.text_input("URL Webhook de Make:", placeholder="https://hook.eu1.make.com/...")
+# Lee el webhook de forma oculta desde el servidor por defecto
+webhook_url = st.sidebar.text_input("URL Webhook de Make:", value=st.secrets.get("MAKE_WEBHOOK_URL", ""), placeholder="https://hook.eu1.make.com/...")
 
 # 3. Formulario de entrada
 st.markdown("### 📝 Configuración de la Pieza de Contenido")
