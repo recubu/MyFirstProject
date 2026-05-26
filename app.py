@@ -29,11 +29,9 @@ st.markdown("""
 st.title("🚀 Sistema de Contenidos - TProtege")
 st.subheader("Ingeniería Audiovisual e Integración Tecnológica")
 
-# 2. Configuración en la barra lateral
+# 2. Configuración en la barra lateral (Leyendo de los Secrets guardados)
 st.sidebar.header("Configuración de Conexión")
-# Intenta leer la clave de forma oculta desde el servidor; si no existe, pide escribirla
 api_key = st.sidebar.text_input("Introduce tu Gemini API Key:", value=st.secrets.get("GEMINI_API_KEY", ""), type="password")
-# Lee el webhook de forma oculta desde el servidor por defecto
 webhook_url = st.sidebar.text_input("URL Webhook de Make:", value=st.secrets.get("MAKE_WEBHOOK_URL", ""), placeholder="https://hook.eu1.make.com/...")
 
 # 3. Formulario de entrada
@@ -63,7 +61,7 @@ Devuelve un objeto JSON puro y directo que contenga exactamente la siguiente est
   "objective": "Objetivo fijado",
   "caption": "El copy final redactado en masculino neutro B2B, usando frases cortas, espacios y saltos de línea",
   "hashtags": ["lista", "de", "hashtags"],
-  "image_prompt": "El prompt visual hiperdescriptivo generado por la Directora de Arte",
+  "image_prompt": "Sugerencia de diseño o enfoque visual para la publicación (orientación vertical)",
   "metadata": { "target_audience": "Público objetivo", "cta_link": "Link correspondiente" }
 }
 """
@@ -72,13 +70,13 @@ if st.button("✨ Generar Pack de Contenido"):
     if not api_key:
         st.error("❌ Por favor, introduce tu Gemini API Key en la barra lateral.")
     else:
-        with st.spinner("🤖 El motor de TProtege está diseñando tu contenido..."):
+        with st.spinner("🤖 El motor de TProtege está designing tu contenido..."):
             try:
                 client = genai.Client(api_key=api_key)
                 user_prompt = f"Genera el contenido con estos datos: Red: {red_social}, Público: {publico}, Objetivo: {objetivo}, Tema: {tema}, CTA: {cta}, Restricciones: {restricciones}"
                 
                 response = client.models.generate_content(
-                    model='gemini-3.5-flash',
+                    model='gemini-2.5-flash',
                     contents=user_prompt,
                     config=types.GenerateContentConfig(
                         system_instruction=system_instruction,
@@ -103,7 +101,7 @@ if 'json_data' in st.session_state:
     
     st.markdown(f"**Idea Ganadora:** {data.get('idea_seleccionada')}")
     st.text_area("✍️ Copy Redactado (Masculino Neutro B2B):", value=data.get('caption'), height=250)
-    st.text_input("🖼️ Prompt para Generador de Imágenes:", value=data.get('image_prompt'))
+    st.text_input("🖼️ Enfoque Visual Sugerido:", value=data.get('image_prompt'))
     
     st.markdown("### 🔄 Conexión con Ecosistema de Automatización")
     if st.button("📤 Enviar Pack Listo a Make"):
@@ -114,7 +112,7 @@ if 'json_data' in st.session_state:
                 try:
                     res = requests.post(webhook_url, json=data)
                     if res.status_code == 200:
-                        st.success("🚀 ¡Datos enviados a Make correctamente! Tu post está en la línea de producción.")
+                        st.success("🚀 ¡Datos guardados en tu Google Sheets correctamente!")
                     else:
                         st.error(f"Make recibió los datos pero respondió con error: {res.status_code}")
                 except Exception as e:
