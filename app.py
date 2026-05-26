@@ -31,7 +31,8 @@ st.subheader("Ingeniería Audiovisual e Integración Tecnológica")
 
 # 2. Configuración en la barra lateral
 st.sidebar.header("Configuración de Conexión")
-api_key = st.sidebar.text_input("Introduce tu Gemini API Key:", type="password")
+# Intenta leer la clave de forma oculta desde el servidor; si no existe, pide escribirla
+api_key = st.sidebar.text_input("Introduce tu Gemini API Key:", value=st.secrets.get("GEMINI_API_KEY", ""), type="password")
 webhook_url = st.sidebar.text_input("URL Webhook de Make:", placeholder="https://hook.eu1.make.com/...")
 
 # 3. Formulario de entrada
